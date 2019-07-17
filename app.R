@@ -3,24 +3,24 @@ require(shinydashboard)
 library(ggplot2)
 library(dplyr)
 
-#Read dataset
+# Read dataset
 
 movies <- read.csv('MoviesDataset.csv', numerals = c("no.loss"), stringsAsFactors = F,header=T)
 head(movies)
 
 
-#Remova NAs
+# Remove NAs
 
 sum(is.na(movies))
 colSums(is.na(movies))
 movies.clean <- na.omit(movies)
 nrow(movies.clean)
 
-#Dashboard header carrying the title of the dashboard
+# Dashboard header carrying the title of the dashboard
 
 header <- dashboardHeader(title = "Movies Explorer")  
 
-#Sidebar content of the dashboard
+# Sidebar content of the dashboard
 sidebar <- dashboardSidebar(
   sidebarMenu(
     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard"))
@@ -58,19 +58,19 @@ frow2 <- fluidRow(
 # combine the two fluid rows to make the body
 body <- dashboardBody(frow1, frow2)
 
-#completing the ui part with dashboardPage
+# completing the ui part with dashboardPage
 ui <- dashboardPage(title = 'This is my Page title', header, sidebar, body, skin='red')
 
 # create the server functions for the dashboard  
 server <- function(input, output) { 
   
-  #some data manipulation to derive the values of KPI boxes
+  # some data manipulation to derive the values of KPI boxes
 
   screens.by.year <- movies.clean %>% group_by(Year) %>% summarise(value = sum(Screens)) %>% filter(value==max(value))
   views.per.year <- movies.clean %>% group_by(Year) %>% summarise(value = sum(Views)) %>% filter(value==max(value))
   
   
-  #creating the valueBoxOutput content
+  # creating the valueBoxOutput content
  
   output$value1 <- renderValueBox({
     
@@ -94,7 +94,7 @@ server <- function(input, output) {
     
   })
   
-  #creating the plotOutput content
+  # creating the plotOutput content
   
   output$screens.per.year <- renderPlot({
     ggplot(data = movies.clean, 
